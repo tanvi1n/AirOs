@@ -108,12 +108,14 @@ Application Modules
 
 | Category        | Technology Used   |
 | --------------- | ----------------- |
-| Programming     | Python 3.11+      |
+| Programming     | Python 3.11       |
 | Computer Vision | MediaPipe, OpenCV |
 | UI Framework    | PyQt6             |
 | Processing      | NumPy             |
 
 All tools used are open-source and locally executable.
+
+**Note:** Python 3.11 is required for MediaPipe compatibility on Windows.
 
 ---
 
