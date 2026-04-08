@@ -1,6 +1,6 @@
-# ✨ AirOS – A Self-Calibrating Gesture-Based Desktop Interaction System
+# AirOS – A Self-Calibrating Gesture-Based Desktop Interaction System
 
-## 📌 Overview
+## Overview
 
 AirOS is a gesture-controlled desktop interaction system designed to replace traditional input devices like the mouse and keyboard with natural hand movements. Using computer vision and real-time hand tracking, AirOS enables touchless interaction with a computer system.
 
@@ -8,18 +8,18 @@ The project focuses on improving accessibility, enabling hands-free control, and
 
 ---
 
-## 🚨 Problem Statement
+## Problem Statement
 
 Traditional computer interaction relies heavily on physical devices such as a mouse and keyboard. This creates limitations:
 
-* ❌ No support for touchless interaction
-* ❌ Difficult for users with limited hand mobility
-* ❌ Not suitable for environments like classrooms or presentations
-* ❌ Lack of practical gesture-based desktop systems
+* No support for touchless interaction
+* Difficult for users with limited hand mobility
+* Not suitable for environments like classrooms or presentations
+* Lack of practical gesture-based desktop systems
 
 ---
 
-## 🎯 Objective
+## Objective
 
 To design and implement a **self-calibrating, gesture-based desktop system** that:
 
@@ -30,21 +30,21 @@ To design and implement a **self-calibrating, gesture-based desktop system** tha
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-* 🖐️ **Real-Time Hand Tracking** using webcam input
-* ⚙️ **Self-Calibrating System** that adapts to user movement
-* 🎯 **Gesture Detection Engine** for interpreting hand gestures
-* 🖱️ **Virtual Cursor Control** using fingertip tracking
-* 🔄 **Adaptive Sensitivity Engine** to reduce errors
-* 🧭 **Gesture-Based Navigation System**
-* ✍️ **AirWrite Mode** for finger-based writing
-* 🎛️ **Mini Desktop Simulation** with app modules
-* 🧩 **Modular Architecture** for scalability
+* **Real-Time Hand Tracking** using webcam input
+* **Self-Calibrating System** that adapts to user movement
+* **Gesture Detection Engine** for interpreting hand gestures
+* **Virtual Cursor Control** using fingertip tracking
+* **Adaptive Sensitivity Engine** to reduce errors
+* **Gesture-Based Navigation System**
+* **AirWrite Mode** for finger-based writing
+* **Mini Desktop Simulation** with app modules
+* **Modular Architecture** for scalability
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 Camera Input
@@ -64,7 +64,7 @@ Application Modules
 
 ---
 
-## 🧠 Core Modules
+## Core Modules
 
 ### 1. Hand Tracking Module
 
@@ -104,7 +104,7 @@ Application Modules
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category        | Technology Used   |
 | --------------- | ----------------- |
@@ -119,7 +119,7 @@ All tools used are open-source and locally executable.
 
 ---
 
-## ⚙️ Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the Repository
 
@@ -143,7 +143,7 @@ pip install opencv-python mediapipe numpy pyautogui pyqt6
 
 ---
 
-## ▶️ Running the Project
+## Running the Project
 
 ```bash
 python main.py
@@ -153,20 +153,20 @@ Ensure your webcam is connected.
 
 ---
 
-## 🧪 Current Progress (MVP)
+## Current Progress (MVP)
 
 The current implementation includes:
 
-* ✅ Real-time hand detection
-* ✅ Landmark visualization
-* ✅ Basic gesture recognition (e.g., pinch)
-* ✅ Cursor control using finger tracking
+* Real-time hand detection
+* Landmark visualization
+* Basic gesture recognition (e.g., pinch)
+* Cursor control using finger tracking
 
 This forms the foundation for the full AirOS system.
 
 ---
 
-## 🔮 Future Scope
+## Future Scope
 
 * Full desktop UI implementation
 * Multi-hand gesture support
@@ -177,29 +177,14 @@ This forms the foundation for the full AirOS system.
 
 ---
 
-## 📚 References
-
-* Gesture Controlled Virtual Mouse using AI
-* Hand Tracking Based Virtual Mouse System
-* Augmented Virtual Mouse System
-* Other research papers (see project documentation)
-
----
-
-## 👩‍💻 Contributors
+## Contributors
 
 * Tanvi Nutalapati
 * Balagam Risha Raj
 
 ---
 
-## 🙌 Acknowledgment
-
-We thank our mentor for guidance and support throughout the development of this project.
-
----
-
-## 💡 Conclusion
+## Conclusion
 
 AirOS demonstrates how computer vision and gesture recognition can redefine human-computer interaction by making it more natural, accessible, and futuristic.
 
