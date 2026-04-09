@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel,
                              QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFrame, QTextEdit)
 from PyQt5.QtCore import Qt, QTimer, QTime
 from PyQt5.QtGui import QFont
+from realistic_apps import DocumentViewer, PowerPointWindow
 
 class BrowserWindow(QWidget):
     def __init__(self, parent=None):
@@ -411,15 +412,15 @@ class DesktopUI(QMainWindow):
         icons_layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         
         apps = [
-            ("🌐", "Browser"),
-            ("📁", "Files"),
-            ("⚙️", "Settings"),
-            ("📝", "Notes"),
-            ("📧", "Mail"),
-            ("🎵", "Music"),
-            ("📷", "Camera"),
-            ("🎮", "Games")
-        ]
+       ("🌐", "Browser"),
+    ("📁", "Files"),
+    ("📄", "Document"),
+    ("📊", "Presentation"),
+    ("⚙️", "Settings"),
+    ("📝", "Notes"),
+    ("📧", "Mail"),
+    ("🎵", "Music")
+]
         
         row, col = 0, 0
         max_rows = 4
@@ -486,6 +487,10 @@ class DesktopUI(QMainWindow):
             window = NotesWindow(self)
         elif app_name == "Settings":
             window = SettingsWindow(self)
+        elif app_name == "Document":
+            window = DocumentViewer(self)
+        elif app_name == "Presentation":
+            window = PowerPointWindow(self)
         else:
             window = AppWindow(app_name, self)
         
