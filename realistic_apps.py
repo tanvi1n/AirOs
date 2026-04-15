@@ -146,6 +146,10 @@ class PowerPointWindow(QWidget):
         screen = QApplication.desktop().screenGeometry()
         self.move((screen.width() - 1000) // 2, (screen.height() - 700) // 2)
         
+        # Auto-focus this window for keyboard input
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocus()
+        
         self.current_slide = 0
         self.slides = [
             ("AirOS Presentation", "Gesture-Controlled Computing", "#4A90E2"),
@@ -198,6 +202,7 @@ class PowerPointWindow(QWidget):
         prev_btn = QPushButton("← Previous")
         prev_btn.setStyleSheet("background-color: transparent; color: white; border: none; font-size: 14px;")
         prev_btn.clicked.connect(self.prev_slide)
+        prev_btn.setFocusPolicy(Qt.NoFocus)  # Prevent button from stealing focus
         nav_layout.addWidget(prev_btn)
         
         nav_layout.addStretch()
@@ -205,6 +210,7 @@ class PowerPointWindow(QWidget):
         next_btn = QPushButton("Next →")
         next_btn.setStyleSheet("background-color: transparent; color: white; border: none; font-size: 14px;")
         next_btn.clicked.connect(self.next_slide)
+        next_btn.setFocusPolicy(Qt.NoFocus)  # Prevent button from stealing focus
         nav_layout.addWidget(next_btn)
         
         layout.addWidget(nav_bar)
@@ -227,6 +233,16 @@ class PowerPointWindow(QWidget):
         if self.current_slide > 0:
             self.current_slide -= 1
             self.update_slide()
+    
+    def keyPressEvent(self, event):
+        """Handle keyboard events for slide navigation"""
+        from PyQt5.QtCore import Qt
+        if event.key() == Qt.Key_Right or event.key() == Qt.Key_Space:
+            self.next_slide()
+            print("→ Next slide (keyboard)")
+        elif event.key() == Qt.Key_Left:
+            self.prev_slide()
+            print("← Previous slide (keyboard)")
     
     def create_title_bar(self, title):
         title_bar = QFrame()

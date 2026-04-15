@@ -475,7 +475,7 @@ class DesktopUI(QMainWindow):
         
         # Mode selector
         self.mode_selector = QComboBox()
-        self.mode_selector.addItems(['Desktop', 'Presentation', 'Browser'])
+        self.mode_selector.addItems(['Desktop', 'Document', 'Presentation', 'Browser'])
         self.mode_selector.setStyleSheet("""
             QComboBox {
                 background-color: rgba(255,255,255,0.1);
@@ -525,25 +525,35 @@ class DesktopUI(QMainWindow):
         
     def open_app(self, app_name):
         print(f"✓ Opening {app_name}...")
-        
+
         if app_name == "Browser":
             window = BrowserWindow(self)
+            self.mode_selector.setCurrentIndex(3)  # Auto-switch to Browser
+            print("🔄 Auto-switched to Browser mode")
         elif app_name == "Files":
             window = FilesWindow(self)
+            self.mode_selector.setCurrentIndex(0)  # Desktop
         elif app_name == "Notes":
             window = NotesWindow(self)
+            self.mode_selector.setCurrentIndex(0)  # Desktop
         elif app_name == "Settings":
             window = SettingsWindow(self)
+            self.mode_selector.setCurrentIndex(0)  # Desktop
         elif app_name == "Document":
             window = DocumentViewer(self)
+            self.mode_selector.setCurrentIndex(1)  # Document mode
+            print("🔄 Auto-switched to Document mode")
         elif app_name == "Presentation":
             window = PowerPointWindow(self)
+            self.mode_selector.setCurrentIndex(2)  # Presentation mode  # Auto-switch to Presentation
+            print("🔄 Auto-switched to Presentation mode")
         else:
             window = AppWindow(app_name, self)
-        
+            self.mode_selector.setCurrentIndex(0)  # Desktop
+
         window.show()
         self.open_windows.append(window)
-        
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.esc_count += 1

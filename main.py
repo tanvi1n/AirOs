@@ -26,6 +26,7 @@ class HandTrackingThread(QThread):
         self.start_time = time.time()
         self.last_thumb_pos = None
         self.last_index_pos = None
+        self.last_landmarks = None
         
     def run(self):
         cap = cv2.VideoCapture(0)
@@ -68,7 +69,8 @@ class HandTrackingThread(QThread):
                 # Store positions for gesture controller
                 self.last_thumb_pos = thumb_tip
                 self.last_index_pos = index_tip
-                
+                self.last_landmarks = landmarks 
+
                 # Visual feedback
                 cv2.circle(frame, index_tip, 8, (0, 255, 0), -1)
                 cv2.circle(frame, thumb_tip, 8, (255, 0, 0), -1)
@@ -158,7 +160,8 @@ class AirOS:
         gesture_name = self.controller.process_gesture(
             x, y, distance, 
             self.tracking_thread.last_thumb_pos, 
-            self.tracking_thread.last_index_pos
+            self.tracking_thread.last_index_pos,
+            self.tracking_thread.last_landmarks
         )
         self.ui.set_gesture(gesture_name)
     
