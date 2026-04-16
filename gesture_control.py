@@ -25,7 +25,7 @@ class GestureController:
         # Scroll tracking
         self.prev_fingers_extended = False  # Track finger state
         self.scroll_cooldown_time = 0  # Prevent rapid triggers
-        self.scroll_amount_per_trigger = 100  # Increased from 5 to 20
+        self.scroll_amount_per_trigger = 300  # Increased from 5 to 20
         self.last_finger_y = None  # Track finger position for direction
         self.last_finger_y = None  # Track finger position for direction
         
