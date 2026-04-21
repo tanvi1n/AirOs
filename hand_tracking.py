@@ -6,14 +6,14 @@ class HandTracker:
         self.mp_hands = mp.solutions.hands
         self.hands = self.mp_hands.Hands(
             static_image_mode=False,
-            max_num_hands=1,  # Only track 1 hand for speed
-            min_detection_confidence=0.5,  # Lower for faster detection
+            max_num_hands=1,
+            min_detection_confidence=0.5,
             min_tracking_confidence=0.5
         )
         self.mp_draw = mp.solutions.drawing_utils
         
     def extract_landmarks(self, frame):
-        """Extract index and thumb tip coordinates from frame"""
+        """Extract hand landmarks including all fingertips for fist detection"""
         h, w, _ = frame.shape
         rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = self.hands.process(rgb_frame)
@@ -27,12 +27,33 @@ class HandTracker:
                 self.mp_hands.HAND_CONNECTIONS
             )
             
-            index_tip = hand_landmarks.landmark[8]
+            # Extract all key landmarks
             thumb_tip = hand_landmarks.landmark[4]
+            thumb_ip = hand_landmarks.landmark[3]
+            index_tip = hand_landmarks.landmark[8]
+            index_pip = hand_landmarks.landmark[6]
+            middle_tip = hand_landmarks.landmark[12]
+            middle_pip = hand_landmarks.landmark[10]
+            ring_tip = hand_landmarks.landmark[16]
+            ring_pip = hand_landmarks.landmark[14]
+            pinky_tip = hand_landmarks.landmark[20]
+            pinky_pip = hand_landmarks.landmark[18]
+            wrist = hand_landmarks.landmark[0]
+            palm = hand_landmarks.landmark[9]  # Palm center
             
             return {
+                "thumb_tip": (int(thumb_tip.x * w), int(thumb_tip.y * h)),
+                "thumb_ip": (int(thumb_ip.x * w), int(thumb_ip.y * h)),
                 "index_tip": (int(index_tip.x * w), int(index_tip.y * h)),
-                "thumb_tip": (int(thumb_tip.x * w), int(thumb_tip.y * h))
+                "index_pip": (int(index_pip.x * w), int(index_pip.y * h)),
+                "middle_tip": (int(middle_tip.x * w), int(middle_tip.y * h)),
+                "middle_pip": (int(middle_pip.x * w), int(middle_pip.y * h)),
+                "ring_tip": (int(ring_tip.x * w), int(ring_tip.y * h)),
+                "ring_pip": (int(ring_pip.x * w), int(ring_pip.y * h)),
+                "pinky_tip": (int(pinky_tip.x * w), int(pinky_tip.y * h)),
+                "pinky_pip": (int(pinky_pip.x * w), int(pinky_pip.y * h)),
+                "wrist": (int(wrist.x * w), int(wrist.y * h)),
+                "palm": (int(palm.x * w), int(palm.y * h))
             }
         
         return None

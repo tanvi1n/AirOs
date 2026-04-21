@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel, 
-                             QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFrame, QTextEdit)
-from PyQt5.QtCore import Qt, QTimer, QTime
+                             QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QFrame, QTextEdit, QComboBox)
+from PyQt5.QtCore import Qt, QTimer, QTime, pyqtSignal
 from PyQt5.QtGui import QFont
 from realistic_apps import DocumentViewer, PowerPointWindow
 
@@ -383,9 +383,17 @@ class DesktopIcon(QPushButton):
         """)
 
 class DesktopUI(QMainWindow):
+    recalibrate_requested = pyqtSignal()
+    
     def __init__(self):
         super().__init__()
         self.open_windows = []
+        self.current_mode = 'desktop'
+        self.current_gesture = 'None'
+        self.fps = 0
+        self.hand_detected = False
+        self.esc_count = 0
+        self.esc_timer = None
         self.initUI()
         
     def initUI(self):
@@ -436,6 +444,24 @@ class DesktopUI(QMainWindow):
         desktop_layout.addLayout(icons_layout)
         desktop_layout.addStretch()
         
+        # Stats panel
+        self.stats_panel = QLabel()
+        self.stats_panel.setStyleSheet("""
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+        """)
+        self.stats_panel.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        self.stats_panel.setFixedSize(220, 140)
+        self.stats_panel.setParent(desktop)
+        self.stats_panel.move(self.width() - 240, 20)
+        self.stats_panel.raise_()
+        self.update_stats()
+        
         main_layout.addWidget(desktop)
         
         taskbar = QFrame()
@@ -446,6 +472,27 @@ class DesktopUI(QMainWindow):
         """)
         taskbar_layout = QHBoxLayout(taskbar)
         taskbar_layout.setContentsMargins(15, 0, 15, 0)
+        
+        # Mode selector
+        self.mode_selector = QComboBox()
+        self.mode_selector.addItems(['Desktop', 'Document', 'Presentation', 'Browser'])
+        self.mode_selector.setStyleSheet("""
+            QComboBox {
+                background-color: rgba(255,255,255,0.1);
+                color: white;
+                padding: 5px 15px;
+                border-radius: 5px;
+                font-size: 13px;
+                min-width: 120px;
+            }
+            QComboBox::drop-down { border: none; }
+            QComboBox QAbstractItemView {
+                background-color: #2c3e50;
+                color: white;
+                selection-background-color: #3498db;
+            }
+        """)
+        taskbar_layout.addWidget(self.mode_selector)
         
         taskbar_layout.addStretch()
         
@@ -478,28 +525,91 @@ class DesktopUI(QMainWindow):
         
     def open_app(self, app_name):
         print(f"✓ Opening {app_name}...")
-        
+
         if app_name == "Browser":
             window = BrowserWindow(self)
+            self.mode_selector.setCurrentIndex(3)  # Auto-switch to Browser
+            print("🔄 Auto-switched to Browser mode")
         elif app_name == "Files":
             window = FilesWindow(self)
+            self.mode_selector.setCurrentIndex(0)  # Desktop
         elif app_name == "Notes":
             window = NotesWindow(self)
+            self.mode_selector.setCurrentIndex(0)  # Desktop
         elif app_name == "Settings":
             window = SettingsWindow(self)
+            self.mode_selector.setCurrentIndex(0)  # Desktop
         elif app_name == "Document":
             window = DocumentViewer(self)
+            self.mode_selector.setCurrentIndex(1)  # Document mode
+            print("🔄 Auto-switched to Document mode")
         elif app_name == "Presentation":
             window = PowerPointWindow(self)
+            self.mode_selector.setCurrentIndex(2)  # Presentation mode  # Auto-switch to Presentation
+            print("🔄 Auto-switched to Presentation mode")
         else:
             window = AppWindow(app_name, self)
-        
+            self.mode_selector.setCurrentIndex(0)  # Desktop
+
         window.show()
         self.open_windows.append(window)
-        
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            self.close()
+            self.esc_count += 1
+            print(f"⚠ ESC pressed {self.esc_count}/3 times (press 3 times to exit)")
+            
+            # Reset counter after 2 seconds if not pressed again
+            if self.esc_timer:
+                self.esc_timer.stop()
+            self.esc_timer = QTimer()
+            self.esc_timer.setSingleShot(True)
+            self.esc_timer.timeout.connect(lambda: setattr(self, 'esc_count', 0))
+            self.esc_timer.start(2000)
+            
+            if self.esc_count >= 3:
+                print("🛑 Exiting AirOS...")
+                self.close()
+        elif event.key() == Qt.Key_C:
+            self.recalibrate_requested.emit()
+        elif event.key() == Qt.Key_1:
+            self.mode_selector.setCurrentIndex(0)  # Desktop
+            print("⌨ Switched to Desktop mode")
+        elif event.key() == Qt.Key_2:
+            self.mode_selector.setCurrentIndex(1)  # Presentation
+            print("⌨ Switched to Presentation mode")
+        elif event.key() == Qt.Key_3:
+            self.mode_selector.setCurrentIndex(2)  # Browser
+            print("⌨ Switched to Browser mode")
+
+    def update_stats(self):
+        hand_status = "✓ Detected" if self.hand_detected else "✗ No Hand"
+        stats_text = f"""╔══════════════════╗
+║   AIROS STATS    ║
+╚══════════════════╝
+
+FPS:      {self.fps}
+Mode:     {self.current_mode.upper()}
+Gesture:  {self.current_gesture}
+Hand:     {hand_status}
+"""
+        self.stats_panel.setText(stats_text)
+
+    def set_fps(self, fps):
+        self.fps = fps
+        self.update_stats()
+
+    def set_gesture(self, gesture_name):
+        self.current_gesture = gesture_name
+        self.update_stats()
+
+    def set_hand_status(self, detected):
+        self.hand_detected = detected
+        self.update_stats()
+
+    def set_mode_display(self, mode):
+        self.current_mode = mode
+        self.update_stats()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
